@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ljw</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/login.css}">
+    <!--    <script type="text/javascript" src="../static/js/jquery.min.js"></script>-->
+
+    <script type="text/javascript" th:src="@{/js/jquery-3.4.1.min.js}"></script>
+    <script th:src="@{/js/jquery.validate.min.js}"></script>
+    <script th:src="@{/js/messages_zh.min.js}"></script>
+    <!--    <script src="js/jquery.cookie.js"></script>-->
+    <script th:src="@{/js/additional-methods.min.js}"></script>
+    <!--    <script src="js/vue.min.js"></script>-->
+    <!--    <script src="js/axios.min.js"></script>-->
+    <script>
+        $(function () {
+            //$("#sub").attr("disabled", "disabled");
+            $("#regeist").validate({
+                submitHandler: function () {
+                    console.log("sss");
+                    $.ajax({
+                        url: "/test/registration",
+                        type: "POST",
+                        dataType: "text",
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify({
+                            username: $("#username").val(),
+                            phone: $("#phone").val(),
+                            password: $("#password").val()
+                        }),
+                        success: function (response) {
+                            alert(response);
+                            window.location.href = "/login.html";
+                        }
+                    });
+                },
+                onfocusout: function (element) {
+                    return $(element).valid();
+                },
+                // onfocusin:false,
+                // focusInvalid: true,
+                rules: {
+                    username: {
+                        required: true,
+                        remote: {
+                            url: "/test/checkUserOnly",
+                            type: "get",
+                            data: {
+                                username: function () {
+                                    return $("#username").val();
+                                }
+                            }
+                        },
+                    },
+                    phone: {
+                        required: true,
+                        remote: {
+                            url: "/test/checkPhoneOnly",
+                            type: "get",
+                            data: {
+                                phone: function () {
+                                    return $("#phone").val();
+                                }
+                            }
+                        },
+                    },
+                    password: {
+                        required: true,
+                    },
+                    password_confirm: {
+                        required: true,
+                        equalTo: "#password",
+                    }
+                },
+                messages: {
+                    username: {
+                        required: "请输入",
+                        remote: "已存在"
+                    },
+                    phone: {
+                        required: "请输入",
+                        remote: "已存在"
+                    },
+                    password: {
+                        required: "请输入",
+                    },
+                    password_confirm: {
+                        required: "请输入",
+                        equalTo: "两次密码不一样"
+                    }
+                }
+                //onfocusout:true
+
+            });
+        });
+        // if (validators.valid()){
+        //     console.log("验证通过");
+        //     $("#sub").removeAttr("disabled");
+        //     console.log("可以点击");
+        //     $("#sub").onclick(function (){
+        //
+        //     });
+        // }
+    </script>
+</head>
+<body class="login_bj">
+
+<div class="zhuce_body">
+    <div class="zhuce_kong">
+        <div class="zc">
+            <div class="bj_bai">
+                <h3>欢迎注册</h3>
+                <form id="regeist" method="post">
+                    <p>
+                        <label for="username"></label>
+                        <!--                <input id="username" v-model="name" name="username" type="text" class="kuang_txt name" placeholder="用户名" v-on:blur="checkOne" required="required">-->
+                        <input id="username" name="username" type="text" class="kuang_txt name" placeholder="用户名"
+                               required="required">
+                    </p>
+                    <p>
+                        <label for="phone"></label>
+                        <input id="phone" name="phone" type="text" class="kuang_txt phone" placeholder="手机号">
+                    </p>
+                    <p>
+                        <label for="password"></label>
+                        <input id="password" name="password" type="password" class="kuang_txt password"
+                               placeholder="密码">
+                    </p>
+                    <p>
+                        <label for="password_confirm"></label>
+                        <input id="password_confirm" name="password_confirm" type="password"
+                               class="kuang_txt confirmpassword" placeholder="确认密码">
+                    </p>
+                    <!--            </
+                <input name="" type="text" class="kuang_txt possword" placeholder="邀请码">-->
+                    <!--                <input name="" type="text" class="kuang_txt yanzm" placeholder="验证码">-->
+                    <!--                <div>-->
+                    <!--                	<div class="hui_kuang"><img src="../static/images/zc_22.jpg" width="92" height="31"></div>-->
+                    <!--                	<div class="shuaxin"><a href="#"><img src="../static/images/zc_25.jpg" width="13" height="14"></a></div>-->
+                    <!--                </div>-->
+                    <div>
+                        <input name="" type="checkbox" value=""><span>已阅读并同意<a href="#" target="_blank"><span
+                            class="lan">《用户使用协议》</span></a></span>
+                    </div>
+                    <input type="submit" class="btn_zhuce" value="注册">
+                    <a class="btn_zhuce" th:href="@{/login}">返回登录</a>
+                </form>
+            </div>
+            <!--        	<div class="bj_right">-->
+            <!--            	<p>使用以下账号直接登录</p>-->
+            <!--                <a href="#" class="zhuce_qq">QQ注册</a>-->
+            <!--                <a href="#" class="zhuce_wb">微博注册</a>-->
+            <!--                <a href="#" class="zhuce_wx">微信注册</a>-->
+            <!--                <p>已有账号？<a href="../static/login.html">立即登录</a></p>-->
+            <!--            -->
+            <!--            </div>-->
+        </div>
+    </div>
+
+</div>
+<!--<script>-->
+<!--    var vm = new Vue({-->
+<!--        el: '#regeist',-->
+<!--        data: {-->
+<!--            name: "",-->
+<!--            phone: 0,-->
+<!--            password: "",-->
+<!--            password_confirm: "",-->
+<!--            flags: false,-->
+<!--            validators: {-->
+<!--                rules:{-->
+<!--                    name:{-->
+<!--                        required:true,-->
+<!--                        remote: this.flags-->
+<!--                    }-->
+<!--                },-->
+<!--                messages:{-->
+<!--                    name:{-->
+<!--                        required: "输入",-->
+<!--                        remote: "已存在"-->
+<!--                    }-->
+<!--                }-->
+<!--            }-->
+<!--        },-->
+<!--        methods:{-->
+<!--            checkOne(){-->
+<!--                axios-->
+<!--                    .get("/test/checkUserOnly",{-->
+<!--                        params:{-->
+<!--                            name: encodeURI(this.name.valueOf())-->
+<!--                        }-->
+<!--                    })-->
+<!--                .then(function (response){-->
+<!--                    this.flags = response.data;-->
+<!--                }).catch(function (error){-->
+<!--                    console.log(error);-->
+<!--                });-->
+<!--                $("#regeist").validate(this.validators);-->
+<!--            }-->
+<!--        }-->
+<!--    });-->
+<!--</script>-->
+
+</body>
+</html>
